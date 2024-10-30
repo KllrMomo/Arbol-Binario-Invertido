@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Nodo {
+    int dato;
+    struct Nodo* left;
+    struct Nodo* right;
+};
+
+struct Nodo* crearNodo(int dato) {
+    struct Nodo *nuevoNodo = malloc(sizeof(struct Nodo));
+    if (nuevoNodo != NULL) {
+        nuevoNodo->dato = dato;
+        nuevoNodo->left = NULL;
+        nuevoNodo->right = NULL;
+    }
+    return nuevoNodo;
+}
+
+struct Nodo* insertarNodo(struct Nodo* padre, int dato) {
+    if (padre == NULL) {
+        return crearNodo(dato);
+    }
+    if (dato == padre->dato) {
+        return padre;
+    }
+    if (dato < padre->dato) {
+        padre->left = insertarNodo(padre->left, dato);
+    } else {
+        padre->right = insertarNodo(padre->right, dato);
+    }
+    return padre;
+}
+
+// Función para invertir el árbol binario
+void invertirArbol(struct Nodo* root) {
+    if (root == NULL) {
+        return;
+    }
+    // Intercambiar los hijos izquierdo y derecho
+    struct Nodo* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
+
+    // Invertir izquierdo y derecho
+    invertirArbol(root->left);
+    invertirArbol(root->right);
+}
+
+void imprimirInOrden(struct Nodo* root) {
+    if (root != NULL) {
+        imprimirInOrden(root->left);
+        printf("%d ", root->dato);
+        imprimirInOrden(root->right);
+    }
+}
+
+int main() {
+    struct Nodo* root = crearNodo(5);
+    insertarNodo(root, 6);
+    insertarNodo(root, 4);
+    insertarNodo(root, 3);
+    insertarNodo(root, 2);
+    insertarNodo(root, 1);
+    insertarNodo(root, 8);
+    insertarNodo(root, 9);
+    insertarNodo(root, 7);
+
+    printf("Arbol Inorden Original: ");
+    imprimirInOrden(root);
+    printf("\n");
+
+    invertirArbol(root);
+
+    printf("Arbol Inorden Invertido: ");
+    imprimirInOrden(root);
+    printf("\n");
+
+    return 0;
+}
